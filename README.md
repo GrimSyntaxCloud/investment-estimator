@@ -1,28 +1,36 @@
 # Investment Estimator
 
-A JavaScript coursework calculator for annual compound growth, with a randomized-example button.
+An annual compound-growth calculator presented as a burgundy and cyan growth observatory. A full-width SVG plot makes the relationship between capital, rate and time visible, while a compact parameter dock keeps the calculation close at hand.
 
-[Live demo](https://grimsyntaxcloud.github.io/investment-estimator/) · [Portfolio](https://grimsyntaxcloud.github.io/)
+[Live demo](https://grimsyntaxcloud.github.io/investment-estimator/) · [Portfolio](https://grimsyntaxcloud.github.io/projects/investment-estimator/)
 
-## What it does
+## What you can do
 
-Enter an investment greater than zero and up to 100,000, an annual rate greater than zero and up to 15%, and a whole number of years from 1 to 50. Each year adds interest to the previous balance. Results use U.S. dollar formatting, including values below 1,000. Random examples stay within the same bounds.
+- Enter an investment greater than $0 and up to $100,000, a constant annual rate greater than 0% and up to 15%, and a whole number of years from 1 to 50.
+- Calculate the future value, growth added and balance multiplier.
+- Trace each year's actual calculated balance with the keyboard-accessible year slider. The chart uses a zero-based dollar axis; the dashed line marks the initial capital.
+- Generate a randomized example with the original limits: investment 1–50,000, rate 1–15%, years 1–50.
+- Pause the decorative status pulse and curve-drawing animation. System reduced-motion settings are respected automatically.
+
+The initial $10,000 / 6% / 20-year example is an illustration, not a recommended investment. Editing any input clears the old plot and amounts until a valid estimate is submitted, so stale results cannot be mistaken for the new parameters. Invalid fields provide text errors, accessible error associations and focus on the first invalid input.
 
 ## How it works
 
-The interface is static HTML and CSS, with native JavaScript in `calcValue.js`. There are no npm dependencies, API keys, accounts, backend services or paid libraries.
+Static HTML and CSS provide the responsive layout; native JavaScript in `calcValue.js` validates inputs and builds an annual balance series. Each year's balance is the previous balance multiplied by `1 + rate / 100`. That same series drives the amount, SVG curve and year inspector. Currency uses U.S. dollar formatting.
 
-This educational model assumes a fixed annual rate and no additional deposits, withdrawals, fees or taxes. It is not a financial forecast; inputs are not stored.
+There are no application dependencies, external scripts, web fonts, API keys, accounts, backend services or paid libraries. The old Bootstrap beta CDN stylesheet has been removed. Values remain in the current browser page and are not stored or sent to a service. No database or retention policy is involved.
+
+This educational model assumes a fixed annual rate and no additional deposits, withdrawals, fees or taxes. It is not a market forecast.
 
 ## Run locally
 
-Use Python 3 to serve this directory:
+Use Python 3 to serve the repository:
 
 ```sh
 python3 -m http.server 8080 --bind 127.0.0.1
 ```
 
-Open http://127.0.0.1:8080/. No package installation is required to use the app.
+Open http://127.0.0.1:8080/. No package installation or build step is required.
 
 ## Verify changes
 
@@ -32,8 +40,10 @@ With Node.js 22 or newer:
 node --test test/*.test.mjs
 ```
 
-The regression tests cover the repaired behavior using lightweight DOM stand-ins. They do not replace a browser layout check. GitHub Actions runs them on pushes and pull requests. Dependabot checks the Actions used by CI weekly; there is no application dependency manifest to scan.
+The seven tests cover currency formatting, known annual compounding, year-by-year balances, pure zero-rate arithmetic, existing input boundaries (the UI still requires a positive rate), random examples, and stale-result invalidation. They use lightweight DOM stand-ins and do not replace browser layout testing. Browser checks cover keyboard calculation and year inspection, invalid fields, random examples, motion control, and narrow layouts at 390 and 320 CSS-pixel viewport settings.
+
+GitHub Actions runs the tests on pushes and pull requests. Dependabot checks Actions weekly; there is no application dependency manifest to audit.
 
 ## Hosting and provenance
 
-GitHub Pages serves the default branch for free. This remains an educational project by Andres Macias; the original exercise structure is retained. The October 2026 maintenance pass documents local setup and adds targeted correctness fixes and regression coverage without redesigning the interface.
+GitHub Pages serves the default branch for free. This project began as Andres Macias's JavaScript coursework. The October 2026 redesign was developed collaboratively by Andres and an AI coding assistant: Andres selected the direction and requested a distinctive, interactive portfolio presentation; the assistant implemented and checked the visual system, chart and regression coverage. The original annual-compounding model, input limits and random-example behavior remain intact.
