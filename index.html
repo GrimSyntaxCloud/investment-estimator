@@ -1,69 +1,209 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Future Value Application</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <script src="calcValue.js"></script>
-</head>
-
-<body>
-    <div class="container">
-        <main id="main_content">
-            <div class="row">
-                <div class="col text-center">
-                    <h1>Investment Estimator Application</h1>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-3">
-                    <label for="investment">Investment:</label>
-                </div>
-                <div class="col">
-                    <input type="text" name="investment" id="investment">
-                    <span id="investment_error">*</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-3">
-                    <label for="rate">Interest Rate %:</label>
-                </div>
-                <div class="col">
-                    <input type="text" name="rate" id="rate">
-                    <span id="rate_error">*</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-3">
-                    <label for="years">Years:</label>
-                </div>
-                <div class="col">
-                    <input type="text" name="years" id="years">
-                    <span id="years_error">*</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-3">
-                    <label for="years">Result:</label>
-                </div>
-                <div class="col-3">
-                    <input type="text" name="result" id="result" disabled>
-                </div>
-            </div>
-            <div class="row mt-5">
-                <div class="col offset-3">
-                    <button type="button" id="calculate_value" class="btn btn-primary">Calculate Future Value</button>
-                    <button type="button" id="random_value" class="btn btn-primary">Random Value</button>
-                </div>
-            </div>
-            
-
-        </main>
-    </div>
-</body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explore annual compound growth in a visual investment calculator. Set an amount, rate and time horizon, then trace each year."
+    />
+    <meta name="theme-color" content="#210c20" />
+    <title>Investment Estimator — The growth observatory</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="calcValue.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#parameters">Skip to calculator</a>
+    <main>
+      <header class="masthead">
+        <a class="identity" href="./" aria-label="Investment Estimator home"
+          ><span class="mark" aria-hidden="true">↗</span
+          ><span>INVESTMENT<br />ESTIMATOR</span></a
+        >
+        <span class="edition">AN EXPERIMENT IN COMPOUND GROWTH</span>
+        <button
+          id="motion_toggle"
+          class="quiet-button"
+          type="button"
+          aria-pressed="false"
+        >
+          Pause motion <span aria-hidden="true">Ⅱ</span>
+        </button>
+      </header>
+      <section class="observatory" aria-labelledby="page-title">
+        <div class="section-heading">
+          <p class="eyebrow">
+            <span class="status-dot"></span> THE GROWTH OBSERVATORY
+          </p>
+          <p class="model-label">MODEL 01 / ANNUAL COMPOUNDING</p>
+        </div>
+        <div class="headline">
+          <h1>Give time<br /><span>some capital.</span></h1>
+          <div class="result-block">
+            <label for="result" class="eyebrow">ESTIMATED FUTURE VALUE</label
+            ><input
+              id="result"
+              name="result"
+              type="text"
+              readonly
+              tabindex="-1"
+              aria-describedby="result_status"
+            />
+            <p id="result_status" role="status" aria-live="polite">
+              Adjust the parameters to explore an example.
+            </p>
+          </div>
+        </div>
+        <div class="chart-shell" id="chart_shell">
+          <div class="chart-topline">
+            <span><i class="legend-dot cyan"></i>PROJECTED BALANCE</span
+            ><span><i class="legend-dot rose"></i>INITIAL CAPITAL</span
+            ><span class="chart-unit">USD / YEAR</span>
+          </div>
+          <svg
+            id="growth_chart"
+            viewBox="0 0 1120 340"
+            role="img"
+            aria-labelledby="chart_title chart_description"
+          >
+            <title id="chart_title">Annual compound growth</title>
+            <desc id="chart_description">
+              Calculate an estimate to draw your yearly balances.
+            </desc>
+            <defs>
+              <linearGradient id="area_fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#a8f3e8" stop-opacity=".24" />
+                <stop offset="100%" stop-color="#a8f3e8" stop-opacity="0" />
+              </linearGradient>
+              <filter
+                id="line_glow"
+                x="-20%"
+                y="-30%"
+                width="140%"
+                height="160%"
+              >
+                <feGaussianBlur stdDeviation="3" />
+              </filter>
+            </defs>
+            <g id="grid_lines"></g>
+            <path id="growth_area" fill="url(#area_fill)"></path>
+            <path id="capital_line" class="capital-line"></path>
+            <path
+              id="growth_glow"
+              class="growth-glow"
+              filter="url(#line_glow)"
+            ></path>
+            <path id="growth_path" class="growth-path" pathLength="1"></path>
+            <g id="chart_points"></g>
+            <g id="chart_labels"></g>
+            <g id="inspection_line" class="inspection-line">
+              <line y1="20" y2="295"></line>
+              <circle r="6"></circle>
+            </g>
+          </svg>
+          <div class="inspection">
+            <label for="year_inspector"
+              >TRACE THE CURVE <span aria-hidden="true">↔</span></label
+            ><input
+              id="year_inspector"
+              type="range"
+              min="0"
+              max="20"
+              value="20"
+              aria-label="Inspect balance at a year"
+            /><output id="year_readout" for="year_inspector">Year 20</output
+            ><strong id="balance_readout">—</strong>
+          </div>
+          <p id="chart_empty" hidden>
+            Update the highlighted fields to plot your estimate.
+          </p>
+        </div>
+        <div class="metrics">
+          <div>
+            <span class="eyebrow">01 / CAPITAL IN</span
+            ><strong id="capital_metric">—</strong>
+          </div>
+          <div>
+            <span class="eyebrow">02 / GROWTH ADDED</span
+            ><strong id="growth_metric">—</strong>
+          </div>
+          <div>
+            <span class="eyebrow">03 / BALANCE MULTIPLIER</span
+            ><strong id="multiple_metric">—</strong>
+          </div>
+          <p>Small beginnings.<br />A longer perspective.</p>
+        </div>
+      </section>
+      <form id="parameters" class="parameter-dock" novalidate>
+        <div class="dock-title">
+          <span class="eyebrow">YOUR PARAMETERS</span>
+          <h2>Change the <br />trajectory.</h2>
+        </div>
+        <div class="field">
+          <label for="investment">Starting investment <span>USD</span></label>
+          <div class="input-wrap">
+            <span aria-hidden="true">$</span
+            ><input
+              id="investment"
+              name="investment"
+              type="text"
+              inputmode="decimal"
+              value="10000"
+              aria-describedby="investment_hint investment_error"
+            />
+          </div>
+          <small id="investment_hint">More than $0, up to $100,000</small
+          ><span id="investment_error" class="error"> </span>
+        </div>
+        <div class="field">
+          <label for="rate">Annual rate <span>%</span></label>
+          <div class="input-wrap">
+            <input
+              id="rate"
+              name="rate"
+              type="text"
+              inputmode="decimal"
+              value="6"
+              aria-describedby="rate_hint rate_error"
+            /><span aria-hidden="true">%</span>
+          </div>
+          <small id="rate_hint">More than 0%, up to 15%</small
+          ><span id="rate_error" class="error"> </span>
+        </div>
+        <div class="field">
+          <label for="years">Time horizon <span>YEARS</span></label>
+          <div class="input-wrap">
+            <input
+              id="years"
+              name="years"
+              type="text"
+              inputmode="numeric"
+              value="20"
+              aria-describedby="years_hint years_error"
+            /><span aria-hidden="true">yr</span>
+          </div>
+          <small id="years_hint">Whole years, from 1 to 50</small
+          ><span id="years_error" class="error"> </span>
+        </div>
+        <div class="actions">
+          <button id="calculate_value" class="calculate" type="submit">
+            Plot estimate <span aria-hidden="true">↗</span></button
+          ><button id="random_value" class="random" type="button">
+            <span aria-hidden="true">⤨</span> Try a random example
+          </button>
+        </div>
+      </form>
+      <footer>
+        <p>
+          <span class="foot-marker">i</span> A model, not a market forecast. A
+          constant annual rate, with no additional deposits, withdrawals, fees
+          or taxes.
+        </p>
+        <a
+          href="https://grimsyntaxcloud.github.io/projects/investment-estimator/"
+          >A project by Andres Macias <span aria-hidden="true">↗</span></a
+        >
+      </footer>
+    </main>
+  </body>
 </html>
